@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Chatbot</title>
+    <style>
+        /* Import Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        /* General Page Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background: #8e44ad;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Fade-out Animation */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: #008000;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: 600;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .hide-welcome {
+            animation: fadeOut 1s ease-in-out forwards;
+        }
+
+        /* Chat Page */
+        .chat-container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #4b0082, #8e44ad);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+        }
+
+        .show-chat {
+            display: flex !important;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+
+        /* Chat Box */
+        .chat-box {
+            width: 420px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* Title */
+        h2 {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Chat Messages */
+        .chat-content {
+            height: 350px;
+            overflow-y: auto;
+            border-radius: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+
+        /* Chat Bubbles */
+        .user-message, .bot-message {
+            padding: 12px 14px;
+            border-radius: 20px;
+            margin: 8px 0;
+            max-width: 75%;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .user-message {
+            background: #6a5acd;
+            color: white;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: #ddd;
+            color: black;
+            text-align: left;
+        }
+
+        /* Input Box */
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background: #ececec;
+            text-align: center;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 18px;
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcome-screen">
+        Welcome to Chatbot
+    </div>
+
+    <!-- Chat Page -->
+    <div class="chat-container" id="chat-container">
+        <div class="chat-box">
+            <h2>Grace College Chatbot 🤖</h2>
+            <div class="chat-content" id="chat-content">
+                <div class="bot-message">Hello! Ask me anything about our college. 😊</div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Type your question..." />
+                <button onclick="sendMessage()">Send 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth Transition from Welcome to Chatbot Page
+        setTimeout(() => {
+            document.getElementById("welcome-screen").classList.add("hide-welcome");
+            setTimeout(() => {
+                document.getElementById("welcome-screen").style.display = "none";
+                document.getElementById("chat-container").classList.add("show-chat");
+            }, 1000);
+        }, 3000);
+    
+        const responses = {
+            "hello": "Hello! How can I assist you? 😊",
+            "hi": "Hi there! Ask me anything about our college. 🎓",
+            "what courses are available?": "We offer B.E in CSE, ECE, EEE, IT, and Mechanical. 📚",
+            "is there a hostel facility?": "Yes, we provide hostel facilities for both boys and girls. 🏠",
+            "how to apply for admission?": "You can apply online through our college website or visit the admission office. 📝",
+            "bye": "Goodbye! Have a great day! 👋",
+            "what is the name of the Principal?": "Dr. Richard",
+            "what is the contact number?": "+91 **********",
+            "where is the college?": "Thoothukudi",
+            "default": "I'm sorry, I don't have an answer for that. Please contact our admin office. 📞"
+        };
+    
+        function sendMessage() {
+            let userInput = document.getElementById("user-input").value.toLowerCase().trim();
+            if (userInput === "") return;
+    
+            let chatContent = document.getElementById("chat-content");
+    
+            let userMessage = document.createElement("div");
+            userMessage.className = "user-message";
+            userMessage.textContent = userInput;
+            chatContent.appendChild(userMessage);
+    
+            chatContent.scrollTop = chatContent.scrollHeight;
+    
+            setTimeout(() => {
+                let botResponse = responses[userInput] || responses["default"];
+                let botMessage = document.createElement("div");
+                botMessage.className = "bot-message";
+                botMessage.textContent = botResponse;
+                chatContent.appendChild(botMessage);
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }, 1000);
+    
+            document.getElementById("user-input").value = "";
+        }
+    
+        // Add event listener to send message on pressing Enter
+        document.getElementById("user-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+    
+</body>
+</html>
